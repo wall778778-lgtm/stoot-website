@@ -1,0 +1,893 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: #03040a;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    overflow-x: hidden;
+}
+
+
+/* =========================
+   STARS
+========================= */
+
+.stars,
+.stars2,
+.stars3 {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.stars {
+    background-image:
+        radial-gradient(2px 2px at 20px 30px, white, transparent),
+        radial-gradient(1px 1px at 100px 100px, white, transparent),
+        radial-gradient(2px 2px at 250px 200px, white, transparent),
+        radial-gradient(1px 1px at 400px 80px, white, transparent),
+        radial-gradient(2px 2px at 600px 300px, white, transparent),
+        radial-gradient(1px 1px at 800px 150px, white, transparent),
+        radial-gradient(2px 2px at 1000px 400px, white, transparent),
+        radial-gradient(1px 1px at 1200px 100px, white, transparent);
+    background-size: 1300px 500px;
+    animation: moveStars 30s linear infinite;
+}
+
+.stars2 {
+    opacity: 0.5;
+    transform: scale(1.5);
+    animation: moveStars 60s linear infinite;
+}
+
+.stars3 {
+    opacity: 0.25;
+    transform: scale(2);
+    animation: moveStars 90s linear infinite;
+}
+
+@keyframes moveStars {
+
+    from {
+        transform: translateY(0);
+    }
+
+    to {
+        transform: translateY(500px);
+    }
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+header {
+    height: 80px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 6%;
+
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+
+    z-index: 100;
+
+    background: rgba(3, 4, 10, 0.75);
+
+    backdrop-filter: blur(15px);
+
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.logo span {
+    font-size: 28px;
+    font-weight: 900;
+    letter-spacing: 5px;
+
+    color: white;
+
+    text-shadow:
+        0 0 10px #00c8ff,
+        0 0 30px #006eff;
+}
+
+nav {
+    display: flex;
+    gap: 30px;
+}
+
+nav a,
+.footer-links a {
+    color: #aaa;
+
+    text-decoration: none;
+
+    font-size: 13px;
+
+    letter-spacing: 2px;
+
+    transition: 0.3s;
+}
+
+nav a:hover,
+.footer-links a:hover {
+    color: white;
+
+    text-shadow:
+        0 0 10px #00c8ff;
+}
+
+.nav-download {
+    padding: 12px 20px;
+
+    color: white;
+
+    text-decoration: none;
+
+    border: 1px solid #00c8ff;
+
+    font-size: 12px;
+
+    letter-spacing: 2px;
+
+    transition: 0.3s;
+}
+
+.nav-download:hover {
+    background: #00c8ff;
+
+    color: black;
+
+    box-shadow:
+        0 0 20px #00c8ff;
+}
+
+
+/* =========================
+   HERO
+========================= */
+
+.hero {
+    min-height: 100vh;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 120px 10% 80px;
+
+    position: relative;
+
+    overflow: hidden;
+}
+
+.hero::before {
+    content: "";
+
+    position: absolute;
+
+    width: 700px;
+    height: 700px;
+
+    right: -300px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    background: #006eff;
+
+    opacity: 0.08;
+
+    filter: blur(100px);
+
+    border-radius: 50%;
+}
+
+.hero-content {
+    max-width: 650px;
+
+    z-index: 2;
+}
+
+.small-title {
+    color: #00c8ff;
+
+    letter-spacing: 5px;
+
+    font-size: 13px;
+
+    margin-bottom: 15px;
+}
+
+.hero h1 {
+    font-size: clamp(80px, 12vw, 170px);
+
+    line-height: 0.8;
+
+    font-weight: 900;
+
+    letter-spacing: 10px;
+
+    text-shadow:
+        0 0 20px #008cff,
+        0 0 60px #004cff;
+}
+
+.hero h2 {
+    margin-top: 30px;
+
+    font-size: 25px;
+
+    letter-spacing: 5px;
+}
+
+.description {
+    margin-top: 20px;
+
+    max-width: 550px;
+
+    color: #9ca3b0;
+
+    line-height: 1.8;
+
+    font-size: 16px;
+}
+
+.buttons {
+    display: flex;
+
+    gap: 15px;
+
+    margin-top: 35px;
+}
+
+.download-button,
+.learn-button {
+    display: inline-block;
+
+    padding: 17px 28px;
+
+    text-decoration: none;
+
+    font-weight: bold;
+
+    letter-spacing: 2px;
+
+    transition: 0.3s;
+}
+
+.download-button {
+    background: #00c8ff;
+
+    color: #02040a;
+
+    box-shadow:
+        0 0 25px rgba(0,200,255,0.4);
+}
+
+.download-button:hover {
+    transform: translateY(-4px);
+
+    box-shadow:
+        0 0 40px rgba(0,200,255,0.8);
+}
+
+.learn-button {
+    color: white;
+
+    border: 1px solid #444;
+}
+
+.learn-button:hover {
+    border-color: #00c8ff;
+
+    color: #00c8ff;
+}
+
+.version {
+    margin-top: 20px;
+
+    color: #555;
+
+    font-size: 12px;
+
+    letter-spacing: 2px;
+}
+
+.version strong {
+    color: #00c8ff;
+}
+
+
+/* =========================
+   SHIP
+========================= */
+
+.hero-ship {
+    width: 40%;
+
+    position: relative;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+}
+
+.hero-ship img {
+    width: 100%;
+
+    max-width: 500px;
+
+    position: relative;
+
+    z-index: 2;
+
+    animation: floating 4s ease-in-out infinite;
+
+    filter:
+        drop-shadow(0 0 20px #00c8ff)
+        drop-shadow(0 0 50px #006eff);
+}
+
+.glow {
+    position: absolute;
+
+    width: 300px;
+    height: 300px;
+
+    border-radius: 50%;
+
+    background: #0077ff;
+
+    opacity: 0.2;
+
+    filter: blur(80px);
+
+    animation: pulse 3s infinite;
+}
+
+@keyframes floating {
+
+    0%, 100% {
+        transform: translateY(0) rotate(0deg);
+    }
+
+    50% {
+        transform: translateY(-20px) rotate(2deg);
+    }
+}
+
+@keyframes pulse {
+
+    0%, 100% {
+        transform: scale(0.8);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+}
+
+
+/* =========================
+   SECTIONS
+========================= */
+
+.section {
+    padding: 120px 8%;
+
+    position: relative;
+}
+
+.section-title {
+    text-align: center;
+
+    margin-bottom: 60px;
+}
+
+.section-title p {
+    color: #00c8ff;
+
+    letter-spacing: 5px;
+
+    font-size: 11px;
+
+    margin-bottom: 12px;
+}
+
+.section-title h2 {
+    font-size: 45px;
+
+    letter-spacing: 5px;
+}
+
+
+/* =========================
+   FEATURES
+========================= */
+
+.feature-grid {
+    max-width: 1200px;
+
+    margin: auto;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 20px;
+}
+
+.feature-card {
+    padding: 35px;
+
+    min-height: 220px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,0.06),
+            rgba(255,255,255,0.015)
+        );
+
+    border: 1px solid rgba(255,255,255,0.08);
+
+    transition: 0.3s;
+
+    position: relative;
+
+    overflow: hidden;
+}
+
+.feature-card::before {
+    content: "";
+
+    position: absolute;
+
+    width: 100px;
+    height: 100px;
+
+    background: #00c8ff;
+
+    filter: blur(80px);
+
+    opacity: 0;
+
+    transition: 0.3s;
+}
+
+.feature-card:hover {
+    transform: translateY(-8px);
+
+    border-color: #00c8ff;
+
+    box-shadow:
+        0 15px 40px rgba(0,0,0,0.4);
+}
+
+.feature-card:hover::before {
+    opacity: 0.3;
+}
+
+.feature-icon {
+    font-size: 35px;
+
+    margin-bottom: 20px;
+}
+
+.feature-card h3 {
+    letter-spacing: 2px;
+
+    margin-bottom: 12px;
+}
+
+.feature-card p {
+    color: #888;
+
+    line-height: 1.7;
+}
+
+
+/* =========================
+   NEWS
+========================= */
+
+.news-section {
+    background:
+        linear-gradient(
+            rgba(0,0,0,0.5),
+            rgba(0,0,0,0.8)
+        );
+}
+
+.news-container {
+    max-width: 1100px;
+
+    margin: auto;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 25px;
+}
+
+.news-card {
+    background: #080a12;
+
+    border: 1px solid #171b27;
+
+    overflow: hidden;
+
+    transition: 0.3s;
+}
+
+.news-card:hover {
+    transform: translateY(-8px);
+
+    border-color: #00c8ff;
+}
+
+.news-image {
+    height: 200px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background:
+        radial-gradient(
+            circle,
+            #073b72,
+            #05070e 70%
+        );
+}
+
+.news-image.second {
+    background:
+        radial-gradient(
+            circle,
+            #30106b,
+            #05070e 70%
+        );
+}
+
+.news-image span {
+    font-size: 55px;
+
+    font-weight: 900;
+
+    letter-spacing: 8px;
+
+    color: white;
+
+    text-shadow:
+        0 0 20px #00c8ff;
+}
+
+.news-content {
+    padding: 30px;
+}
+
+.date {
+    color: #00c8ff;
+
+    font-size: 11px;
+
+    letter-spacing: 3px;
+
+    margin-bottom: 12px;
+}
+
+.news-content h3 {
+    margin-bottom: 15px;
+
+    font-size: 22px;
+
+    letter-spacing: 2px;
+}
+
+.news-content p {
+    color: #888;
+
+    line-height: 1.7;
+}
+
+.news-content a {
+    display: inline-block;
+
+    margin-top: 20px;
+
+    color: #00c8ff;
+
+    text-decoration: none;
+
+    font-size: 12px;
+
+    letter-spacing: 2px;
+}
+
+
+/* =========================
+   SCREENSHOTS
+========================= */
+
+.screenshots {
+    max-width: 1200px;
+
+    margin: auto;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 20px;
+}
+
+.screenshot {
+    overflow: hidden;
+
+    border: 1px solid #1b2030;
+
+    transition: 0.3s;
+}
+
+.screenshot img {
+    width: 100%;
+
+    display: block;
+
+    transition: 0.5s;
+}
+
+.screenshot:hover {
+    border-color: #00c8ff;
+
+    box-shadow:
+        0 0 30px rgba(0,200,255,0.2);
+}
+
+.screenshot:hover img {
+    transform: scale(1.05);
+}
+
+
+/* =========================
+   DOWNLOAD
+========================= */
+
+.download-section {
+    padding: 150px 20px;
+
+    text-align: center;
+
+    background:
+        radial-gradient(
+            circle at center,
+            #07356b,
+            #03040a 60%
+        );
+}
+
+.download-content p:first-child {
+    color: #00c8ff;
+
+    letter-spacing: 5px;
+
+    font-size: 12px;
+}
+
+.download-content h2 {
+    margin: 20px 0;
+
+    font-size: clamp(40px, 7vw, 80px);
+
+    letter-spacing: 5px;
+}
+
+.download-content > p {
+    color: #888;
+
+    margin-bottom: 35px;
+}
+
+.big-download {
+    display: inline-block;
+
+    padding: 20px 45px;
+
+    background: #00c8ff;
+
+    color: #02040a;
+
+    text-decoration: none;
+
+    font-weight: bold;
+
+    letter-spacing: 3px;
+
+    box-shadow:
+        0 0 30px rgba(0,200,255,0.4);
+
+    transition: 0.3s;
+}
+
+.big-download:hover {
+    transform: scale(1.05);
+
+    box-shadow:
+        0 0 60px rgba(0,200,255,0.8);
+}
+
+.download-content small {
+    display: block;
+
+    margin-top: 20px;
+
+    color: #555;
+
+    letter-spacing: 2px;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+footer {
+    padding: 50px 8%;
+
+    border-top: 1px solid #171a24;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    color: #555;
+}
+
+.footer-logo {
+    color: white;
+
+    font-size: 20px;
+
+    font-weight: bold;
+
+    letter-spacing: 5px;
+}
+
+.footer-links {
+    display: flex;
+
+    gap: 20px;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 900px) {
+
+    nav {
+        display: none;
+    }
+
+    header {
+        padding: 0 5%;
+    }
+
+    .hero {
+        flex-direction: column;
+
+        text-align: center;
+
+        padding-top: 150px;
+    }
+
+    .hero-content {
+        max-width: 100%;
+    }
+
+    .hero h1 {
+        font-size: 80px;
+    }
+
+    .description {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .buttons {
+        justify-content: center;
+    }
+
+    .hero-ship {
+        width: 80%;
+
+        margin-top: 50px;
+    }
+
+    .feature-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .news-container {
+        grid-template-columns: 1fr;
+    }
+
+    .screenshots {
+        grid-template-columns: 1fr;
+    }
+
+    footer {
+        flex-direction: column;
+
+        gap: 25px;
+
+        text-align: center;
+    }
+
+}
+
+@media (max-width: 500px) {
+
+    .hero h1 {
+        font-size: 60px;
+
+        letter-spacing: 5px;
+    }
+
+    .hero h2 {
+        font-size: 18px;
+    }
+
+    .buttons {
+        flex-direction: column;
+    }
+
+    .download-button,
+    .learn-button {
+        width: 100%;
+    }
+
+    .section {
+        padding: 80px 6%;
+    }
+
+    .section-title h2 {
+        font-size: 32px;
+    }
+
+}
