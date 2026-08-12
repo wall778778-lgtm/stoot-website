@@ -3,7 +3,10 @@
 // ================================
 
 
-// Smooth scrolling
+// ================================
+// SMOOTH SCROLLING
+// ================================
+
 document.querySelectorAll('a[href^="#"]').forEach(link => {
 
     link.addEventListener("click", function(event) {
@@ -27,10 +30,15 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
 });
 
 
-// Header changes when scrolling
+// ================================
+// HEADER CHANGES WHEN SCROLLING
+// ================================
+
 const header = document.querySelector("header");
 
 window.addEventListener("scroll", () => {
+
+    if (!header) return;
 
     if (window.scrollY > 50) {
 
@@ -47,7 +55,10 @@ window.addEventListener("scroll", () => {
 });
 
 
-// Small mouse movement effect for the ship
+// ================================
+// MOUSE MOVEMENT EFFECT FOR SHIP
+// ================================
+
 const ship = document.querySelector(".hero-ship img");
 
 document.addEventListener("mousemove", (event) => {
@@ -64,24 +75,88 @@ document.addEventListener("mousemove", (event) => {
         `translate(${x}px, ${y}px)`;
 
 });
-/* =========================
-   STOOT COMMUNITY COMMENTS
-========================= */
-
-const commentsList = document.getElementById("comments-list");
-const commentName = document.getElementById("comment-name");
-const commentBody = document.getElementById("comment-body");
-const postCommentButton = document.getElementById("post-comment");
-const commentMessage = document.getElementById("comment-message");
 
 
-/* =========================
-   LOAD COMMENTS
-========================= */
+// ==================================================
+// STOOT COMMUNITY COMMENTS
+// ==================================================
+
+
+// ================================
+// COMMENT ELEMENTS
+// ================================
+
+const commentsList =
+    document.getElementById("comments-list");
+
+const commentName =
+    document.getElementById("comment-name");
+
+const commentBody =
+    document.getElementById("comment-body");
+
+const postCommentButton =
+    document.getElementById("post-comment");
+
+const commentMessage =
+    document.getElementById("comment-message");
+
+
+// ================================
+// VISITOR FINGERPRINT
+// ================================
+
+function getFingerprint() {
+
+    let fingerprint =
+        localStorage.getItem("stoot_fingerprint");
+
+
+    if (!fingerprint) {
+
+        if (
+            typeof crypto !== "undefined" &&
+            crypto.randomUUID
+        ) {
+
+            fingerprint =
+                "stoot-" +
+                crypto.randomUUID();
+
+        } else {
+
+            fingerprint =
+                "stoot-" +
+                Date.now() +
+                "-" +
+                Math.random()
+                    .toString(36)
+                    .substring(2);
+
+        }
+
+
+        localStorage.setItem(
+            "stoot_fingerprint",
+            fingerprint
+        );
+
+    }
+
+
+    return fingerprint;
+
+}
+
+
+// ================================
+// LOAD COMMENTS
+// ================================
 
 async function loadComments() {
 
     if (!commentsList) return;
+
 
     commentsList.innerHTML = `
         <p class="comments-loading">
@@ -89,21 +164,35 @@ async function loadComments() {
         </p>
     `;
 
+
     try {
 
-        const response = await fetch("/api/comments");
+        const response =
+            await fetch("/api/comments");
+
 
         if (!response.ok) {
-            throw new Error("Failed to load comments");
+
+            throw new Error(
+                "Failed to load comments."
+            );
+
         }
 
-        const data = await response.json();
 
-        displayComments(data.comments || []);
+        const data =
+            await response.json();
+
+
+        displayComments(
+            data.comments || []
+        );
+
 
     } catch (error) {
 
         console.error(error);
+
 
         commentsList.innerHTML = `
             <p class="no-comments">
@@ -112,17 +201,20 @@ async function loadComments() {
                 TRY AGAIN LATER.
             </p>
         `;
+
     }
+
 }
 
 
-/* =========================
-   DISPLAY COMMENTS
-========================= */
+// ================================
+// DISPLAY COMMENTS
+// ================================
 
 function displayComments(comments) {
 
     if (!commentsList) return;
+
 
     if (comments.length === 0) {
 
@@ -135,6 +227,7 @@ function displayComments(comments) {
         `;
 
         return;
+
     }
 
 
@@ -143,28 +236,57 @@ function displayComments(comments) {
 
     comments.forEach(comment => {
 
-        const card = document.createElement("div");
 
-        card.className = "comment-card";
+        // ----------------------------
+        // COMMENT CARD
+        // ----------------------------
 
+        const card =
+            document.createElement("div");
 
-        const top = document.createElement("div");
-
-        top.className = "comment-top";
-
-
-        const name = document.createElement("div");
-
-        name.className = "comment-name";
-
-        name.textContent = comment.name;
+        card.className =
+            "comment-card";
 
 
-        const date = document.createElement("div");
+        // ----------------------------
+        // TOP
+        // ----------------------------
 
-        date.className = "comment-date";
+        const top =
+            document.createElement("div");
 
-        date.textContent = formatCommentDate(comment.created_at);
+        top.className =
+            "comment-top";
+
+
+        // ----------------------------
+        // NAME
+        // ----------------------------
+
+        const name =
+            document.createElement("div");
+
+        name.className =
+            "comment-name";
+
+        name.textContent =
+            comment.name;
+
+
+        // ----------------------------
+        // DATE
+        // ----------------------------
+
+        const date =
+            document.createElement("div");
+
+        date.className =
+            "comment-date";
+
+        date.textContent =
+            formatCommentDate(
+                comment.created_at
+            );
 
 
         top.appendChild(name);
@@ -172,34 +294,66 @@ function displayComments(comments) {
         top.appendChild(date);
 
 
-        const body = document.createElement("div");
+        // ----------------------------
+        // COMMENT BODY
+        // ----------------------------
 
-        body.className = "comment-body";
+        const body =
+            document.createElement("div");
 
-        body.textContent = comment.body;
+        body.className =
+            "comment-body";
 
-
-        const actions = document.createElement("div");
-
-        actions.className = "comment-actions";
-
-
-        const likeButton = document.createElement("button");
-
-        likeButton.className = "like-button";
-
-        likeButton.textContent = `👍 ${comment.likes}`;
+        body.textContent =
+            comment.body;
 
 
-        likeButton.addEventListener("click", () => {
+        // ----------------------------
+        // ACTIONS
+        // ----------------------------
 
-            likeComment(comment.id, likeButton);
+        const actions =
+            document.createElement("div");
 
-        });
+        actions.className =
+            "comment-actions";
 
 
-        actions.appendChild(likeButton);
+        // ----------------------------
+        // LIKE BUTTON
+        // ----------------------------
 
+        const likeButton =
+            document.createElement("button");
+
+        likeButton.className =
+            "like-button";
+
+        likeButton.textContent =
+            `👍 ${comment.likes}`;
+
+
+        likeButton.addEventListener(
+            "click",
+            () => {
+
+                likeComment(
+                    comment.id,
+                    likeButton
+                );
+
+            }
+        );
+
+
+        actions.appendChild(
+            likeButton
+        );
+
+
+        // ----------------------------
+        // BUILD CARD
+        // ----------------------------
 
         card.appendChild(top);
 
@@ -208,108 +362,211 @@ function displayComments(comments) {
         card.appendChild(actions);
 
 
+        // ----------------------------
+        // ADMIN REPLY
+        // ----------------------------
+
         if (comment.admin_reply) {
 
-            const reply = document.createElement("div");
 
-            reply.className = "admin-reply";
+            const reply =
+                document.createElement("div");
 
-
-            const replyTitle = document.createElement("div");
-
-            replyTitle.className = "admin-reply-title";
-
-            replyTitle.textContent = "STOOT ADMIN";
+            reply.className =
+                "admin-reply";
 
 
-            const replyText = document.createElement("div");
+            const replyTitle =
+                document.createElement("div");
 
-            replyText.className = "admin-reply-text";
+            replyTitle.className =
+                "admin-reply-title";
 
-            replyText.textContent = comment.admin_reply;
-
-
-            reply.appendChild(replyTitle);
-
-            reply.appendChild(replyText);
+            replyTitle.textContent =
+                "STOOT ADMIN";
 
 
-            card.appendChild(reply);
+            const replyText =
+                document.createElement("div");
+
+            replyText.className =
+                "admin-reply-text";
+
+            replyText.textContent =
+                comment.admin_reply;
+
+
+            reply.appendChild(
+                replyTitle
+            );
+
+            reply.appendChild(
+                replyText
+            );
+
+
+            card.appendChild(
+                reply
+            );
 
         }
 
 
-        commentsList.appendChild(card);
+        commentsList.appendChild(
+            card
+        );
 
     });
 
 }
 
 
-/* =========================
-   POST COMMENT
-========================= */
+// ================================
+// POST COMMENT
+// ================================
 
 async function postComment() {
 
-    const name = commentName.value.trim();
-
-    const body = commentBody.value.trim();
-
-
-    if (!name || !body) {
-
-        commentMessage.textContent =
-            "PLEASE ENTER YOUR NAME AND COMMENT.";
-
+    if (!commentName || !commentBody) {
         return;
     }
 
 
-    postCommentButton.disabled = true;
+    const name =
+        commentName.value.trim();
 
-    commentMessage.textContent =
-        "TRANSMITTING...";
+
+    const body =
+        commentBody.value.trim();
+
+
+    // ----------------------------
+    // VALIDATION
+    // ----------------------------
+
+    if (!name || !body) {
+
+        if (commentMessage) {
+
+            commentMessage.textContent =
+                "PLEASE ENTER YOUR NAME AND COMMENT.";
+
+        }
+
+        return;
+
+    }
+
+
+    if (name.length < 2) {
+
+        commentMessage.textContent =
+            "NAME IS TOO SHORT.";
+
+        return;
+
+    }
+
+
+    if (body.length < 2) {
+
+        commentMessage.textContent =
+            "COMMENT IS TOO SHORT.";
+
+        return;
+
+    }
+
+
+    // ----------------------------
+    // DISABLE BUTTON
+    // ----------------------------
+
+    if (postCommentButton) {
+
+        postCommentButton.disabled =
+            true;
+
+    }
+
+
+    if (commentMessage) {
+
+        commentMessage.textContent =
+            "TRANSMITTING...";
+
+    }
 
 
     try {
 
-        const response = await fetch("/api/comments", {
 
-            method: "POST",
+        // ----------------------------
+        // SEND COMMENT
+        // ----------------------------
 
-            headers: {
-                "Content-Type": "application/json"
-            },
+        const response =
+            await fetch(
+                "/api/comments",
+                {
 
-            body: JSON.stringify({
-                name: name,
-                body: body
-            })
+                    method: "POST",
 
-        });
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+
+                        name: name,
+
+                        body: body
+
+                    })
+
+                }
+            );
 
 
-        const data = await response.json();
+        const data =
+            await response.json();
 
+
+        // ----------------------------
+        // CHECK RESPONSE
+        // ----------------------------
 
         if (!response.ok) {
 
             throw new Error(
-                data.error || "Could not post comment."
+                data.error ||
+                "Could not post comment."
             );
 
         }
 
+
+        // ----------------------------
+        // CLEAR FORM
+        // ----------------------------
 
         commentName.value = "";
 
         commentBody.value = "";
 
 
-        commentMessage.textContent =
-            "TRANSMISSION RECEIVED!";
+        if (commentMessage) {
 
+            commentMessage.textContent =
+                "TRANSMISSION RECEIVED!";
+
+        }
+
+
+        // ----------------------------
+        // RELOAD COMMENTS
+        // ----------------------------
 
         await loadComments();
 
@@ -318,120 +575,125 @@ async function postComment() {
 
         console.error(error);
 
-        commentMessage.textContent =
-            error.message || "TRANSMISSION FAILED.";
+
+        if (commentMessage) {
+
+            commentMessage.textContent =
+                error.message ||
+                "TRANSMISSION FAILED.";
+
+        }
 
     }
 
 
-    postCommentButton.disabled = false;
+    // ----------------------------
+    // ENABLE BUTTON
+    // ----------------------------
+
+    if (postCommentButton) {
+
+        postCommentButton.disabled =
+            false;
+
+    }
 
 }
 
 
-/* =========================
-   LIKE COMMENT
-========================= */
+// ================================
+// LIKE COMMENT
+// ================================
 
-async function likeComment(commentId, button) {
+async function likeComment(
+    commentId,
+    button
+) {
+
+    if (!button) return;
+
 
     button.disabled = true;
 
 
     try {
 
-        const response = await fetch(
-            "/api/comments/like",
-            {
 
-                method: "POST",
+        // ----------------------------
+        // GET VISITOR ID
+        // ----------------------------
 
-                headers: {
-                    "Content-Type": "application/json"
-                },
-
-                body: JSON.stringify({
-                    comment_id: commentId
-                })
-
-            }
-        );
+        const fingerprint =
+            getFingerprint();
 
 
-        const data = await response.json();
+        // ----------------------------
+        // SEND LIKE
+        // ----------------------------
 
+        const response =
+            await fetch(
+                "/api/comments/like",
+                {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+
+                        comment_id:
+                            commentId,
+
+                        fingerprint:
+                            fingerprint
+
+                    })
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        // ----------------------------
+        // ALREADY LIKED
+        // ----------------------------
+
+        if (
+            !response.ok &&
+            data.alreadyLiked
+        ) {
+
+            button.textContent =
+                `👍 ${data.likes}`;
+
+            button.classList.add(
+                "liked"
+            );
+
+            return;
+
+        }
+
+
+        // ----------------------------
+        // OTHER ERROR
+        // ----------------------------
 
         if (!response.ok) {
 
             throw new Error(
-                data.error || "Could not like comment."
+                data.error ||
+                "Could not like comment."
             );
 
         }
 
 
-        button.textContent =
-            `👍 ${data.likes}`;
-
-
-        button.classList.add("liked");
-
-
-    } catch (error) {
-
-        console.error(error);
-
-    }
-
-
-    button.disabled = false;
-
-}
-
-
-/* =========================
-   DATE
-========================= */
-
-function formatCommentDate(dateString) {
-
-    const date = new Date(dateString);
-
-
-    if (Number.isNaN(date.getTime())) {
-
-        return "";
-
-    }
-
-
-    return date.toLocaleString(
-        undefined,
-        {
-            dateStyle: "medium",
-            timeStyle: "short"
-        }
-    );
-
-}
-
-
-/* =========================
-   EVENTS
-========================= */
-
-if (postCommentButton) {
-
-    postCommentButton.addEventListener(
-        "click",
-        postComment
-    );
-
-}
-
-
-if (commentsList) {
-
-    loadComments();
-
-}
+        // ----------------
