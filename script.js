@@ -9,7 +9,7 @@
 
 document.querySelectorAll('a[href^="#"]').forEach(link => {
 
-    link.addEventListener("click", function(event) {
+    link.addEventListener("click", function (event) {
 
         const target = document.querySelector(
             this.getAttribute("href")
@@ -31,7 +31,7 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
 
 
 // ================================
-// HEADER CHANGES WHEN SCROLLING
+// HEADER
 // ================================
 
 const header = document.querySelector("header");
@@ -56,12 +56,12 @@ window.addEventListener("scroll", () => {
 
 
 // ================================
-// MOUSE MOVEMENT EFFECT FOR SHIP
+// SHIP MOUSE EFFECT
 // ================================
 
 const ship = document.querySelector(".hero-ship img");
 
-document.addEventListener("mousemove", (event) => {
+document.addEventListener("mousemove", event => {
 
     if (!ship) return;
 
@@ -78,13 +78,8 @@ document.addEventListener("mousemove", (event) => {
 
 
 // ==================================================
-// STOOT COMMUNITY COMMENTS
+// STOOT COMMUNITY
 // ==================================================
-
-
-// ================================
-// COMMENT ELEMENTS
-// ================================
 
 const commentsList =
     document.getElementById("comments-list");
@@ -103,48 +98,32 @@ const commentMessage =
 
 
 // ================================
-// VISITOR FINGERPRINT
+// CREATE VISITOR ID
 // ================================
 
-function getFingerprint() {
+function getVisitorId() {
 
-    let fingerprint =
-        localStorage.getItem("stoot_fingerprint");
+    let id =
+        localStorage.getItem("stoot_visitor_id");
 
+    if (!id) {
 
-    if (!fingerprint) {
-
-        if (
-            typeof crypto !== "undefined" &&
-            crypto.randomUUID
-        ) {
-
-            fingerprint =
-                "stoot-" +
-                crypto.randomUUID();
-
-        } else {
-
-            fingerprint =
-                "stoot-" +
-                Date.now() +
-                "-" +
-                Math.random()
-                    .toString(36)
-                    .substring(2);
-
-        }
-
+        id =
+            "visitor-" +
+            Date.now() +
+            "-" +
+            Math.random()
+                .toString(36)
+                .substring(2, 15);
 
         localStorage.setItem(
-            "stoot_fingerprint",
-            fingerprint
+            "stoot_visitor_id",
+            id
         );
 
     }
 
-
-    return fingerprint;
+    return id;
 
 }
 
@@ -157,48 +136,66 @@ async function loadComments() {
 
     if (!commentsList) return;
 
-
     commentsList.innerHTML = `
         <p class="comments-loading">
             LOADING TRANSMISSIONS...
         </p>
     `;
 
-
     try {
 
-        const response =
-            await fetch("/api/comments");
-
+        const response = await fetch(
+            "/api/comments",
+            {
+                method: "GET",
+                cache: "no-store"
+            }
+        );
 
         if (!response.ok) {
 
             throw new Error(
-                "Failed to load comments."
+                "Server returned " +
+                response.status
             );
 
         }
 
-
         const data =
             await response.json();
 
-
-        displayComments(
-            data.comments || []
+        console.log(
+            "STOOT comments:",
+            data
         );
 
+        if (
+            !data ||
+            !Array.isArray(data.comments)
+        ) {
+
+            throw new Error(
+                "Invalid comments response."
+            );
+
+        }
+
+        displayComments(
+            data.comments
+        );
 
     } catch (error) {
 
-        console.error(error);
-
+        console.error(
+            "STOOT comment loading error:",
+            error
+        );
 
         commentsList.innerHTML = `
             <p class="no-comments">
                 COMMUNICATION ERROR.
                 <br>
-                TRY AGAIN LATER.
+                ${escapeHTML(error.message)}
             </p>
         `;
 
@@ -216,6 +213,31 @@ function displayComments(comments) {
     if (!commentsList) return;
 
 
+    // Sort most liked first
+    comments.sort((a, b) => {
+
+        const likesA =
+            Number(a.likes) || 0;
+
+        const likesB =
+            Number(b.likes) || 0;
+
+        if (likesB !== likesA) {
+
+            return likesB - likesA;
+
+        }
+
+        return new Date(
+            b.created_at
+        ) - new Date(
+            a.created_at
+        );
+
+    });
+
+
+    // No comments
     if (comments.length === 0) {
 
         commentsList.innerHTML = `
@@ -235,11 +257,6 @@ function displayComments(comments) {
 
 
     comments.forEach(comment => {
-
-
-        // ----------------------------
-        // COMMENT CARD
-        // ----------------------------
 
         const card =
             document.createElement("div");
@@ -270,7 +287,7 @@ function displayComments(comments) {
             "comment-name";
 
         name.textContent =
-            comment.name;
+            comment.name || "UNKNOWN";
 
 
         // ----------------------------
@@ -295,7 +312,7 @@ function displayComments(comments) {
 
 
         // ----------------------------
-        // COMMENT BODY
+        // BODY
         // ----------------------------
 
         const body =
@@ -305,7 +322,7 @@ function displayComments(comments) {
             "comment-body";
 
         body.textContent =
-            comment.body;
+            comment.body || "";
 
 
         // ----------------------------
@@ -329,8 +346,11 @@ function displayComments(comments) {
         likeButton.className =
             "like-button";
 
+        likeButton.type =
+            "button";
+
         likeButton.textContent =
-            `👍 ${comment.likes}`;
+            `👍 ${Number(comment.likes) || 0}`;
 
 
         likeButton.addEventListener(
@@ -352,7 +372,7 @@ function displayComments(comments) {
 
 
         // ----------------------------
-        // BUILD CARD
+        // CARD
         // ----------------------------
 
         card.appendChild(top);
@@ -367,7 +387,6 @@ function displayComments(comments) {
         // ----------------------------
 
         if (comment.admin_reply) {
-
 
             const reply =
                 document.createElement("div");
@@ -412,9 +431,7 @@ function displayComments(comments) {
         }
 
 
-        commentsList.appendChild(
-            card
-        );
+        commentsList.appendChild(card);
 
     });
 
@@ -428,13 +445,18 @@ function displayComments(comments) {
 async function postComment() {
 
     if (!commentName || !commentBody) {
+
+        console.error(
+            "STOOT: comment form not found."
+        );
+
         return;
+
     }
 
 
     const name =
         commentName.value.trim();
-
 
     const body =
         commentBody.value.trim();
@@ -458,20 +480,20 @@ async function postComment() {
     }
 
 
-    if (name.length < 2) {
+    if (name.length > 40) {
 
         commentMessage.textContent =
-            "NAME IS TOO SHORT.";
+            "NAME IS TOO LONG.";
 
         return;
 
     }
 
 
-    if (body.length < 2) {
+    if (body.length > 1000) {
 
         commentMessage.textContent =
-            "COMMENT IS TOO SHORT.";
+            "COMMENT IS TOO LONG.";
 
         return;
 
@@ -479,7 +501,7 @@ async function postComment() {
 
 
     // ----------------------------
-    // DISABLE BUTTON
+    // BUTTON
     // ----------------------------
 
     if (postCommentButton) {
@@ -500,42 +522,35 @@ async function postComment() {
 
     try {
 
+        const response = await fetch(
+            "/api/comments",
+            {
 
-        // ----------------------------
-        // SEND COMMENT
-        // ----------------------------
+                method: "POST",
 
-        const response =
-            await fetch(
-                "/api/comments",
-                {
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
 
-                    method: "POST",
+                body: JSON.stringify({
+                    name: name,
+                    body: body
+                })
 
-                    headers: {
-                        "Content-Type":
-                            "application/json"
-                    },
-
-                    body: JSON.stringify({
-
-                        name: name,
-
-                        body: body
-
-                    })
-
-                }
-            );
+            }
+        );
 
 
         const data =
             await response.json();
 
 
-        // ----------------------------
-        // CHECK RESPONSE
-        // ----------------------------
+        console.log(
+            "STOOT post response:",
+            data
+        );
+
 
         if (!response.ok) {
 
@@ -548,7 +563,7 @@ async function postComment() {
 
 
         // ----------------------------
-        // CLEAR FORM
+        // SUCCESS
         // ----------------------------
 
         commentName.value = "";
@@ -564,16 +579,15 @@ async function postComment() {
         }
 
 
-        // ----------------------------
-        // RELOAD COMMENTS
-        // ----------------------------
-
         await loadComments();
 
 
     } catch (error) {
 
-        console.error(error);
+        console.error(
+            "STOOT posting error:",
+            error
+        );
 
 
         if (commentMessage) {
@@ -584,17 +598,14 @@ async function postComment() {
 
         }
 
-    }
+    } finally {
 
+        if (postCommentButton) {
 
-    // ----------------------------
-    // ENABLE BUTTON
-    // ----------------------------
+            postCommentButton.disabled =
+                false;
 
-    if (postCommentButton) {
-
-        postCommentButton.disabled =
-            false;
+        }
 
     }
 
@@ -618,75 +629,60 @@ async function likeComment(
 
     try {
 
-
-        // ----------------------------
-        // GET VISITOR ID
-        // ----------------------------
-
-        const fingerprint =
-            getFingerprint();
+        const visitorId =
+            getVisitorId();
 
 
-        // ----------------------------
-        // SEND LIKE
-        // ----------------------------
+        const response = await fetch(
+            "/api/comments/like",
+            {
 
-        const response =
-            await fetch(
-                "/api/comments/like",
-                {
+                method: "POST",
 
-                    method: "POST",
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
 
-                    headers: {
-                        "Content-Type":
-                            "application/json"
-                    },
+                body: JSON.stringify({
 
-                    body: JSON.stringify({
+                    comment_id:
+                        commentId,
 
-                        comment_id:
-                            commentId,
+                    fingerprint:
+                        visitorId
 
-                        fingerprint:
-                            fingerprint
+                })
 
-                    })
-
-                }
-            );
+            }
+        );
 
 
         const data =
             await response.json();
 
 
-        // ----------------------------
-        // ALREADY LIKED
-        // ----------------------------
+        console.log(
+            "STOOT like response:",
+            data
+        );
 
-        if (
-            !response.ok &&
-            data.alreadyLiked
-        ) {
-
-            button.textContent =
-                `👍 ${data.likes}`;
-
-            button.classList.add(
-                "liked"
-            );
-
-            return;
-
-        }
-
-
-        // ----------------------------
-        // OTHER ERROR
-        // ----------------------------
 
         if (!response.ok) {
+
+            if (data.alreadyLiked) {
+
+                button.textContent =
+                    `👍 ${data.likes}`;
+
+                button.classList.add(
+                    "liked"
+                );
+
+                return;
+
+            }
+
 
             throw new Error(
                 data.error ||
@@ -696,4 +692,127 @@ async function likeComment(
         }
 
 
-        // ----------------
+        button.textContent =
+            `👍 ${data.likes}`;
+
+        button.classList.add(
+            "liked"
+        );
+
+
+        // Reload so most-liked comments
+        // move to the top.
+
+        await loadComments();
+
+
+    } catch (error) {
+
+        console.error(
+            "STOOT like error:",
+            error
+        );
+
+
+        alert(
+            error.message ||
+            "Could not like comment."
+        );
+
+    } finally {
+
+        button.disabled =
+            false;
+
+    }
+
+}
+
+
+// ================================
+// FORMAT DATE
+// ================================
+
+function formatCommentDate(
+    dateString
+) {
+
+    if (!dateString) {
+
+        return "";
+
+    }
+
+
+    const date =
+        new Date(dateString);
+
+
+    if (
+        Number.isNaN(
+            date.getTime()
+        )
+    ) {
+
+        return "";
+
+    }
+
+
+    return date.toLocaleString(
+        undefined,
+        {
+            dateStyle: "medium",
+            timeStyle: "short"
+        }
+    );
+
+}
+
+
+// ================================
+// ESCAPE ERROR TEXT
+// ================================
+
+function escapeHTML(text) {
+
+    const div =
+        document.createElement("div");
+
+    div.textContent =
+        String(text);
+
+    return div.innerHTML;
+
+}
+
+
+// ================================
+// EVENTS
+// ================================
+
+if (postCommentButton) {
+
+    postCommentButton.addEventListener(
+        "click",
+        postComment
+    );
+
+} else {
+
+    console.error(
+        "STOOT: POST COMMENT button not found."
+    );
+
+}
+
+
+// ================================
+// START
+// ================================
+
+if (commentsList) {
+
+    loadComments();
+
+}
