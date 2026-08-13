@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>STOOT — Admin</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #03040a;
+            color: white;
+            font-family: Arial, Helvetica, sans-serif;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+        }
+
+        h1 {
+            color: #00c8ff;
+            letter-spacing: 5px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #777;
+            margin-bottom: 40px;
+        }
+
+        .comment {
+            background: #080a12;
+            border: 1px solid #202638;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .comment-name {
+            color: #00c8ff;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .comment-date {
+            color: #666;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .comment-body {
+            color: #ccc;
+            line-height: 1.7;
+            margin: 20px 0;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 100px;
+            background: #03040a;
+            color: white;
+            border: 1px solid #30384d;
+            padding: 15px;
+            resize: vertical;
+            font-family: inherit;
+            margin-bottom: 10px;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #00c8ff;
+        }
+
+        button {
+            background: #00c8ff;
+            color: #02040a;
+            border: none;
+            padding: 12px 20px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            box-shadow: 0 0 20px rgba(0, 200, 255, 0.5);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .reply {
+            margin-top: 15px;
+            padding: 15px;
+            border-left: 3px solid #00c8ff;
+            background: #05070d;
+        }
+
+        .reply-title {
+            color: #00c8ff;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .message {
+            margin-bottom: 20px;
+            color: #00c8ff;
+        }
+
+        .empty {
+            color: #777;
+            padding: 30px 0;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+    <h1>STOOT ADMIN</h1>
+
+    <p class="subtitle">
+        COMMUNITY TRANSMISSION CONTROL
+    </p>
+
+    <div id="message" class="message"></div>
+
+    <div id="comments">
+        Loading comments...
+    </div>
+
+</div>
+
+
+<script>
+
+const commentsContainer =
+    document.getElementById("comments");
+
+const message =
+    document.getElementById("message");
+
+
+async function loadComments() {
+
+    commentsContainer.innerHTML =
+        "Loading comments...";
+
+    try {
+
+        const response =
+            await fetch("/api/comments");
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Could not load comments."
+            );
+
+        }
+
+        const data =
+            await response.json();
+
+        if (
+            !data.comments ||
+            data.comments.length === 0
+        ) {
+
+            commentsContainer.innerHTML = `
+                <p class="empty">
+                    No comments yet.
+                </p>
+            `;
+
+            return;
+
+        }
+
+        commentsContainer.innerHTML = "";
+
+        data.comments.forEach(comment => {
+
+            const box =
+                document.createElement("div");
+
+            box.className =
+                "comment";
+
+
+            const name =
+                document.createElement("div");
+
+            name.className =
+                "comment-name";
+
+            name.textContent =
+                comment.name;
+
+
+            const date =
+                document.createElement("div");
+
+            date.className =
+                "comment-date";
+
+            date.textContent =
+                new Date(
+                    comment.created_at
+                ).toLocaleString();
+
+
+            const body =
+                document.createElement("div");
+
+            body.className =
+                "comment-body";
+
+            body.textContent =
+                comment.body;
+
+
+            const textarea =
+                document.createElement("textarea");
+
+            textarea.placeholder =
+                "Write your admin reply...";
+
+            textarea.value =
+                comment.admin_reply || "";
+
+
+            const button =
+                document.createElement("button");
+
+            button.textContent =
+                comment.admin_reply
+                    ? "UPDATE REPLY"
+                    : "REPLY";
+
+
+            button.addEventListener(
+                "click",
+                async () => {
+
+                    await sendReply(
+                        comment.id,
+                        textarea,
+                        button
+                    );
+
+                }
+            );
+
+
+            box.appendChild(name);
+
+            box.appendChild(date);
+
+            box.appendChild(body);
+
+            if (comment.admin_reply) {
+
+                const reply =
+                    document.createElement("div");
+
+                reply.className =
+                    "reply";
+
+                reply.innerHTML = `
+                    <div class="reply-title">
+                        STOOT ADMIN
+                    </div>
+                `;
+
+                const replyText =
+                    document.createElement("div");
+
+                replyText.textContent =
+                    comment.admin_reply;
+
+                reply.appendChild(
+                    replyText
+                );
+
+                box.appendChild(reply);
+
+            }
+
+            box.appendChild(textarea);
+
+            box.appendChild(button);
+
+            commentsContainer.appendChild(box);
+
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        commentsContainer.innerHTML = `
+            <p class="empty">
+                ${error.message}
+            </p>
+        `;
+
+    }
+
+}
+
+
+async function sendReply(
+    commentId,
+    textarea,
+    button
+) {
+
+    const reply =
+        textarea.value.trim();
+
+    if (!reply) {
+
+        alert(
+            "Please write a reply first."
+        );
+
+        return;
+
+    }
+
+
+    const username =
+        prompt("Admin username:");
+
+    if (username === null) {
+
+        return;
+
+    }
+
+
+    const password =
+        prompt("Admin password:");
+
+    if (password === null) {
+
+        return;
+
+    }
+
+
+    button.disabled = true;
+
+    button.textContent =
+        "SENDING...";
+
+
+    try {
+
+        const credentials =
+            btoa(
+                username +
+                ":" +
+                password
+            );
+
+
+        const response =
+            await fetch(
+                "/api/admin/reply",
+                {
+
+                    method: "POST",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json",
+
+                        "Authorization":
+                            "Basic " +
+                            credentials
+
+                    },
+
+                    body: JSON.stringify({
+
+                        comment_id:
+                            commentId,
+
+                        reply:
+                            reply
+
+                    })
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                data.error ||
+                "Reply failed."
+            );
+
+        }
+
+
+        message.textContent =
+            "REPLY SENT SUCCESSFULLY.";
+
+        await loadComments();
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            error.message
+        );
+
+    } finally {
+
+        button.disabled =
+            false;
+
+        button.textContent =
+            "REPLY";
+
+    }
+
+}
+
+
+loadComments();
+
+</script>
+
+</body>
+
+</html>
