@@ -44,31 +44,55 @@
             margin-bottom: 40px;
         }
 
-        .comment {
+        .section-title {
+            color: #00c8ff;
+            letter-spacing: 2px;
+            margin: 50px 0 20px;
+            border-bottom: 1px solid #202638;
+            padding-bottom: 12px;
+        }
+
+        .comment,
+        .contact-message {
             background: #080a12;
             border: 1px solid #202638;
             padding: 25px;
             margin-bottom: 20px;
         }
 
-        .comment-name {
+        .comment-name,
+        .contact-name {
             color: #00c8ff;
             font-weight: bold;
             font-size: 18px;
         }
 
-        .comment-date {
+        .comment-date,
+        .contact-date {
             color: #666;
             font-size: 12px;
             margin-top: 5px;
         }
 
-        .comment-body {
+        .comment-body,
+        .contact-body {
             color: #ccc;
             line-height: 1.7;
             margin: 20px 0;
             white-space: pre-wrap;
             word-break: break-word;
+        }
+
+        .contact-email {
+            color: #00c8ff;
+            margin-top: 8px;
+            word-break: break-word;
+        }
+
+        .contact-subject {
+            margin-top: 15px;
+            color: white;
+            font-weight: bold;
         }
 
         textarea {
@@ -163,8 +187,26 @@
 
     <div id="message" class="message"></div>
 
+
+    <!-- COMMENTS -->
+
+    <h2 class="section-title">
+        COMMUNITY COMMENTS
+    </h2>
+
     <div id="comments">
         Loading comments...
+    </div>
+
+
+    <!-- CONTACT MESSAGES -->
+
+    <h2 class="section-title">
+        CONTACT MESSAGES
+    </h2>
+
+    <div id="contactMessages">
+        Loading contact messages...
     </div>
 
 </div>
@@ -175,8 +217,17 @@
 const commentsContainer =
     document.getElementById("comments");
 
+const contactMessagesContainer =
+    document.getElementById("contactMessages");
+
 const message =
     document.getElementById("message");
+
+
+
+/* =========================================================
+   COMMENTS
+========================================================= */
 
 
 async function loadComments() {
@@ -273,6 +324,7 @@ async function loadComments() {
                 reply.className =
                     "reply";
 
+
                 const replyTitle =
                     document.createElement("div");
 
@@ -282,11 +334,13 @@ async function loadComments() {
                 replyTitle.textContent =
                     "STOOT ADMIN";
 
+
                 const replyText =
                     document.createElement("div");
 
                 replyText.textContent =
                     comment.admin_reply;
+
 
                 reply.appendChild(
                     replyTitle
@@ -394,6 +448,190 @@ async function loadComments() {
     }
 
 }
+
+
+
+/* =========================================================
+   CONTACT MESSAGES
+========================================================= */
+
+
+async function loadContactMessages() {
+
+    contactMessagesContainer.innerHTML =
+        "Loading contact messages...";
+
+    try {
+
+        const response =
+            await fetch("/api/contact");
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Could not load contact messages."
+            );
+
+        }
+
+        const data =
+            await response.json();
+
+
+        if (
+            !data.messages ||
+            data.messages.length === 0
+        ) {
+
+            contactMessagesContainer.innerHTML = `
+                <p class="empty">
+                    No contact messages yet.
+                </p>
+            `;
+
+            return;
+
+        }
+
+
+        contactMessagesContainer.innerHTML = "";
+
+
+        data.messages.forEach(contact => {
+
+            const box =
+                document.createElement("div");
+
+            box.className =
+                "contact-message";
+
+
+            const name =
+                document.createElement("div");
+
+            name.className =
+                "contact-name";
+
+            name.textContent =
+                contact.name;
+
+
+            const email =
+                document.createElement("div");
+
+            email.className =
+                "contact-email";
+
+            email.textContent =
+                contact.email;
+
+
+            const subject =
+                document.createElement("div");
+
+            subject.className =
+                "contact-subject";
+
+            subject.textContent =
+                "Subject: " +
+                contact.subject;
+
+
+            const date =
+                document.createElement("div");
+
+            date.className =
+                "contact-date";
+
+            date.textContent =
+                new Date(
+                    contact.created_at
+                ).toLocaleString();
+
+
+            const body =
+                document.createElement("div");
+
+            body.className =
+                "contact-body";
+
+            body.textContent =
+                contact.message;
+
+
+            const buttons =
+                document.createElement("div");
+
+            buttons.className =
+                "buttons";
+
+
+            const deleteButton =
+                document.createElement("button");
+
+            deleteButton.textContent =
+                "DELETE";
+
+            deleteButton.className =
+                "delete-button";
+
+
+            deleteButton.addEventListener(
+                "click",
+                async () => {
+
+                    await deleteContactMessage(
+                        contact.id,
+                        deleteButton
+                    );
+
+                }
+            );
+
+
+            buttons.appendChild(
+                deleteButton
+            );
+
+
+            box.appendChild(name);
+
+            box.appendChild(email);
+
+            box.appendChild(subject);
+
+            box.appendChild(date);
+
+            box.appendChild(body);
+
+            box.appendChild(buttons);
+
+
+            contactMessagesContainer.appendChild(
+                box
+            );
+
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        contactMessagesContainer.innerHTML = `
+            <p class="empty">
+                ${error.message}
+            </p>
+        `;
+
+    }
+
+}
+
+
+
+/* =========================================================
+   ADMIN REPLY
+========================================================= */
 
 
 async function sendReply(
@@ -525,6 +763,12 @@ async function sendReply(
 }
 
 
+
+/* =========================================================
+   DELETE COMMENT
+========================================================= */
+
+
 async function deleteComment(
     commentId,
     button
@@ -646,7 +890,142 @@ async function deleteComment(
 }
 
 
+
+/* =========================================================
+   DELETE CONTACT MESSAGE
+========================================================= */
+
+
+async function deleteContactMessage(
+    contactId,
+    button
+) {
+
+    const confirmed =
+        confirm(
+            "Are you sure you want to permanently delete this contact message?\n\nThis cannot be undone."
+        );
+
+    if (!confirmed) {
+
+        return;
+
+    }
+
+
+    const username =
+        prompt("Admin username:");
+
+    if (username === null) {
+
+        return;
+
+    }
+
+
+    const password =
+        prompt("Admin password:");
+
+    if (password === null) {
+
+        return;
+
+    }
+
+
+    button.disabled = true;
+
+    button.textContent =
+        "DELETING...";
+
+
+    try {
+
+        const credentials =
+            btoa(
+                username +
+                ":" +
+                password
+            );
+
+
+        const response =
+            await fetch(
+                "/api/admin/delete-contact",
+                {
+
+                    method: "POST",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json",
+
+                        "Authorization":
+                            "Basic " +
+                            credentials
+
+                    },
+
+                    body: JSON.stringify({
+
+                        contact_id:
+                            contactId
+
+                    })
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                data.error ||
+                "Delete failed."
+            );
+
+        }
+
+
+        message.textContent =
+            "CONTACT MESSAGE DELETED SUCCESSFULLY.";
+
+        await loadContactMessages();
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            error.message
+        );
+
+        button.disabled =
+            false;
+
+        button.textContent =
+            "DELETE";
+
+    }
+
+}
+
+
+
+/* =========================================================
+   LOAD EVERYTHING
+========================================================= */
+
+
 loadComments();
+
+loadContactMessages();
 
 </script>
 
