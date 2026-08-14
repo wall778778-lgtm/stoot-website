@@ -1,3 +1,123 @@
+export async function onRequestGet({ request, env }) {
+    try {
+        const auth = request.headers.get("Authorization");
+
+        if (!auth || !auth.startsWith("Basic ")) {
+            return new Response(
+                JSON.stringify({
+                    error: "Unauthorized"
+                }),
+                {
+                    status: 401,
+                    headers: {
+                        "Content-Type": "application/json",
+                        "WWW-Authenticate": 'Basic realm="STOOT Admin"'
+                    }
+                }
+            );
+        }
+
+        const encoded = auth.slice(6);
+
+        let decoded;
+
+        try {
+            decoded = atob(encoded);
+        } catch {
+            return new Response(
+                JSON.stringify({
+                    error: "Invalid credentials."
+                }),
+                {
+                    status: 401,
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                }
+            );
+        }
+
+        const separator = decoded.indexOf(":");
+
+        if (separator === -1) {
+            return new Response(
+                JSON.stringify({
+                    error: "Invalid credentials."
+                }),
+                {
+                    status: 401,
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                }
+            );
+        }
+
+        const username = decoded.slice(0, separator);
+        const password = decoded.slice(separator + 1);
+
+        if (
+            username !== env.ADMIN_USERNAME ||
+            password !== env.ADMIN_PASSWORD
+        ) {
+            return new Response(
+                JSON.stringify({
+                    error: "Invalid admin credentials."
+                }),
+                {
+                    status: 401,
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                }
+            );
+        }
+
+        const { results } = await env.DB.prepare(
+            `
+            SELECT
+                id,
+                name,
+                email,
+                subject,
+                message,
+                created_at
+            FROM contact_messages
+            ORDER BY created_at DESC
+            `
+        ).all();
+
+        return new Response(
+            JSON.stringify({
+                messages: results || []
+            }),
+            {
+                status: 200,
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }
+        );
+
+    } catch (error) {
+
+        console.error("Contact GET error:", error);
+
+        return new Response(
+            JSON.stringify({
+                error: "Unable to load contact messages."
+            }),
+            {
+                status: 500,
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }
+        );
+    }
+}
+
+
 export async function onRequestPost({ request, env }) {
     try {
         const data = await request.json();
@@ -7,7 +127,6 @@ export async function onRequestPost({ request, env }) {
         const subject = String(data.subject || "").trim();
         const message = String(data.message || "").trim();
 
-        // Validate required fields
         if (!name || !email || !subject || !message) {
             return new Response(
                 JSON.stringify({
@@ -22,7 +141,6 @@ export async function onRequestPost({ request, env }) {
             );
         }
 
-        // Basic length limits
         if (
             name.length > 100 ||
             email.length > 200 ||
@@ -42,8 +160,8 @@ export async function onRequestPost({ request, env }) {
             );
         }
 
-        // Basic email validation
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const emailPattern =
+            /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
         if (!emailPattern.test(email)) {
             return new Response(
@@ -59,7 +177,6 @@ export async function onRequestPost({ request, env }) {
             );
         }
 
-        // Save message to the D1 database
         await env.DB.prepare(
             `
             INSERT INTO contact_messages
@@ -78,7 +195,8 @@ export async function onRequestPost({ request, env }) {
         return new Response(
             JSON.stringify({
                 success: true,
-                message: "Your message has been sent successfully."
+                message:
+                    "Your message has been sent successfully."
             }),
             {
                 status: 200,
@@ -90,11 +208,12 @@ export async function onRequestPost({ request, env }) {
 
     } catch (error) {
 
-        console.error("Contact form error:", error);
+        console.error("Contact POST error:", error);
 
         return new Response(
             JSON.stringify({
-                error: "Unable to send your message right now."
+                error:
+                    "Unable to send your message right now."
             }),
             {
                 status: 500,
