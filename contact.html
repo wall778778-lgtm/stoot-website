@@ -28,7 +28,7 @@
 
         .contact-header {
             text-align: center;
-            margin-bottom: 60px;
+            margin-bottom: 50px;
         }
 
         .contact-header p {
@@ -48,45 +48,117 @@
             border: 1px solid rgba(255,255,255,0.08);
             background: rgba(5, 7, 15, 0.75);
             border-radius: 10px;
-            text-align: center;
         }
 
         .contact-icon {
+            text-align: center;
             font-size: 55px;
             margin-bottom: 20px;
         }
 
         .contact-card h2 {
-            margin-bottom: 20px;
+            text-align: center;
+            margin-bottom: 15px;
             font-size: 28px;
         }
 
-        .contact-card p {
+        .contact-description {
+            text-align: center;
             line-height: 1.8;
             opacity: 0.85;
-            margin-bottom: 20px;
+            margin-bottom: 35px;
+        }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .contact-form label {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: -10px;
+        }
+
+        .contact-form input,
+        .contact-form textarea {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 15px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 6px;
+            color: inherit;
+            font-family: inherit;
+            font-size: 15px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .contact-form input:focus,
+        .contact-form textarea:focus {
+            border-color: rgba(255,255,255,0.4);
+            background: rgba(255,255,255,0.07);
+        }
+
+        .contact-form textarea {
+            min-height: 180px;
+            resize: vertical;
+        }
+
+        .contact-form button {
+            margin-top: 10px;
+            padding: 15px 25px;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 6px;
+            background: rgba(255,255,255,0.08);
+            color: inherit;
+            font-size: 16px;
+            font-family: inherit;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .contact-form button:hover {
+            background: rgba(255,255,255,0.15);
+            transform: translateY(-2px);
+        }
+
+        .contact-form button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .contact-status {
+            text-align: center;
+            margin-top: 20px;
+            min-height: 24px;
+            font-size: 14px;
+        }
+
+        .contact-email-section {
+            text-align: center;
+            margin-top: 35px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .contact-email-section p {
+            opacity: 0.65;
+            font-size: 14px;
         }
 
         .contact-email {
             display: inline-block;
-            margin: 15px 0 25px;
-            padding: 15px 25px;
-            border: 1px solid rgba(255,255,255,0.15);
-            border-radius: 6px;
+            margin-top: 10px;
             color: inherit;
             text-decoration: none;
-            font-size: 18px;
-            transition: 0.3s;
         }
 
         .contact-email:hover {
-            background: rgba(255,255,255,0.08);
-            transform: translateY(-2px);
-        }
-
-        .contact-note {
-            font-size: 14px;
-            opacity: 0.6;
+            text-decoration: underline;
         }
 
         .contact-back {
@@ -121,11 +193,6 @@
                 padding: 30px 20px;
             }
 
-            .contact-email {
-                font-size: 16px;
-                word-break: break-word;
-            }
-
         }
 
     </style>
@@ -140,7 +207,6 @@
 <div class="stars"></div>
 <div class="stars stars2"></div>
 <div class="stars stars3"></div>
-
 
 
 <!-- Navigation -->
@@ -192,7 +258,6 @@
 </header>
 
 
-
 <!-- CONTACT -->
 
 <main class="contact-page">
@@ -213,7 +278,6 @@
         </div>
 
 
-
         <section class="contact-card">
 
             <div class="contact-icon">
@@ -224,32 +288,112 @@
                 CONTACT THE STOOT DEVELOPER
             </h2>
 
-            <p>
+            <p class="contact-description">
                 Have a question about STOOT, found a problem with
                 the website or game, or simply want to get in touch?
-            </p>
-
-            <p>
-                You can contact the STOOT developer using the email
-                address below.
+                Send us a message using the form below.
             </p>
 
 
-            <a class="contact-email"
-               href="mailto:stootdeveloper@gmail.com">
+            <!-- CONTACT FORM -->
 
-                stootdeveloper@gmail.com
-
-            </a>
+            <form id="contactForm"
+                  class="contact-form">
 
 
-            <p class="contact-note">
-                Please use a clear subject when contacting us so
-                your message can be handled more easily.
-            </p>
+                <label for="name">
+                    Name
+                </label>
+
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="Your name"
+                    maxlength="100"
+                    required
+                >
+
+
+                <label for="email">
+                    Email
+                </label>
+
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="your@email.com"
+                    maxlength="200"
+                    required
+                >
+
+
+                <label for="subject">
+                    Subject
+                </label>
+
+                <input
+                    type="text"
+                    id="subject"
+                    name="subject"
+                    placeholder="What is your message about?"
+                    maxlength="200"
+                    required
+                >
+
+
+                <label for="message">
+                    Message
+                </label>
+
+                <textarea
+                    id="message"
+                    name="message"
+                    placeholder="Write your message here..."
+                    maxlength="5000"
+                    required
+                ></textarea>
+
+
+                <button
+                    type="submit"
+                    id="sendButton">
+
+                    SEND MESSAGE
+
+                </button>
+
+
+            </form>
+
+
+            <div
+                id="contactStatus"
+                class="contact-status">
+            </div>
+
+
+            <!-- EMAIL OPTION -->
+
+            <div class="contact-email-section">
+
+                <p>
+                    You can also contact us directly by email:
+                </p>
+
+                <a
+                    class="contact-email"
+                    href="mailto:stootdeveloper@gmail.com">
+
+                    stootdeveloper@gmail.com
+
+                </a>
+
+            </div>
+
 
         </section>
-
 
 
         <div class="contact-back">
@@ -260,10 +404,10 @@
 
         </div>
 
+
     </div>
 
 </main>
-
 
 
 <!-- FOOTER -->
@@ -318,8 +462,86 @@
 </footer>
 
 
-
 <script src="script.js"></script>
+
+
+<script>
+
+const contactForm = document.getElementById("contactForm");
+const contactStatus = document.getElementById("contactStatus");
+const sendButton = document.getElementById("sendButton");
+
+
+contactForm.addEventListener("submit", async function(event) {
+
+    event.preventDefault();
+
+    sendButton.disabled = true;
+    sendButton.textContent = "SENDING...";
+
+    contactStatus.textContent = "";
+
+
+    const formData = {
+
+        name: document.getElementById("name").value.trim(),
+
+        email: document.getElementById("email").value.trim(),
+
+        subject: document.getElementById("subject").value.trim(),
+
+        message: document.getElementById("message").value.trim()
+
+    };
+
+
+    try {
+
+        const response = await fetch("/api/contact", {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify(formData)
+
+        });
+
+
+        const data = await response.json();
+
+
+        if (response.ok) {
+
+            contactStatus.textContent =
+                "Message sent successfully! 🚀";
+
+            contactForm.reset();
+
+        } else {
+
+            contactStatus.textContent =
+                data.error || "Something went wrong. Please try again.";
+
+        }
+
+
+    } catch (error) {
+
+        contactStatus.textContent =
+            "Unable to send your message right now. Please try again later.";
+
+    }
+
+
+    sendButton.disabled = false;
+    sendButton.textContent = "SEND MESSAGE";
+
+});
+
+</script>
 
 </body>
 
