@@ -1,3 +1,4 @@
+```css
 * {
     margin: 0;
     padding: 0;
@@ -891,6 +892,8 @@ footer {
     }
 
 }
+
+
 /* =========================
    COMMUNITY COMMENTS
 ========================= */
@@ -1079,6 +1082,7 @@ footer {
     letter-spacing: 2px;
 }
 
+
 /* MOBILE COMMENTS */
 
 @media (max-width: 600px) {
@@ -1102,3 +1106,47 @@ footer {
     }
 
 }
+
+
+/* =========================
+   AD SPACES
+========================= */
+
+.ad-space {
+    width: 100%;
+    max-width: 1200px;
+    min-height: 120px;
+
+    margin: 30px auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px dashed rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+
+    color: rgba(255, 255, 255, 0.35);
+
+    font-size: 13px;
+    text-align: center;
+
+    box-sizing: border-box;
+}
+
+.ad-space span {
+    opacity: 0.6;
+}
+
+
+/* MOBILE AD SPACES */
+
+@media (max-width: 600px) {
+
+    .ad-space {
+        min-height: 100px;
+        margin: 25px auto;
+    }
+
+}
+```
