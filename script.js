@@ -817,6 +817,34 @@ if (commentsList) {
 
 }
 
+//================================
+// SMOKE
+//================================
+
+let smokeEnabled = true;
+
+const smokeButton = document.getElementById("smokeToggle");
+
+smokeButton.onclick = () => {
+
+    smokeEnabled = !smokeEnabled;
+
+    smokeButton.textContent =
+        smokeEnabled
+        ? "✨ Smoke: ON"
+        : "✨ Smoke: OFF";
+
+    if (!smokeEnabled) {
+        smokeParticles = [];
+        smokeCtx.clearRect(
+            0,
+            0,
+            smokeCanvas.width,
+            smokeCanvas.height
+        );
+    }
+};
+
 const smokeCanvas = document.getElementById("smokeCanvas");
 const smokeCtx = smokeCanvas.getContext("2d");
 
@@ -839,6 +867,8 @@ resizeSmokeCanvas();
 
 document.addEventListener("mousemove", (event) => {
 
+    if(!smokeEnabled) return;
+    
     smokeMouse.lastX = smokeMouse.x;
     smokeMouse.lastY = smokeMouse.y;
 
