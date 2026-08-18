@@ -821,7 +821,8 @@ if (commentsList) {
 // SMOKE
 //================================
 
-let smokeEnabled = true;
+let smokeEnabled = 
+    localStorage.getItem("smokeEnabled") !== "false";
 
 const smokeButton = document.getElementById("smokeToggle");
 
@@ -829,6 +830,8 @@ smokeButton.onclick = () => {
 
     smokeEnabled = !smokeEnabled;
 
+    localStorage.setItem("smokeEnabled", smokeEnabled);
+    
     smokeButton.textContent =
         smokeEnabled
         ? "✨ Smoke: ON"
