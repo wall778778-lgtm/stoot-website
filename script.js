@@ -816,3 +816,186 @@ if (commentsList) {
     loadComments();
 
 }
+
+const smokeCanvas = document.getElementById("smokeCanvas");
+const smokeCtx = smokeCanvas.getContext("2d");
+
+let smokeParticles = [];
+
+const smokeMouse = {
+    x: window.innerWidth / 2,
+    y: window.innerHeight / 2,
+    lastX: window.innerWidth / 2,
+    lastY: window.innerHeight / 2
+};
+
+function resizeSmokeCanvas() {
+    smokeCanvas.width = window.innerWidth;
+    smokeCanvas.height = window.innerHeight;
+}
+
+window.addEventListener("resize", resizeSmokeCanvas);
+resizeSmokeCanvas();
+
+document.addEventListener("mousemove", (event) => {
+
+    smokeMouse.lastX = smokeMouse.x;
+    smokeMouse.lastY = smokeMouse.y;
+
+    smokeMouse.x = event.clientX;
+    smokeMouse.y = event.clientY;
+
+    const dx = smokeMouse.x - smokeMouse.lastX;
+    const dy = smokeMouse.y - smokeMouse.lastY;
+
+    const speed = Math.sqrt(dx * dx + dy * dy);
+
+    const amount = Math.min(
+        Math.floor(speed / 3) + 1,
+        10
+    );
+
+    for (let i = 0; i < amount; i++) {
+        createSmokeParticle(
+            smokeMouse.x,
+            smokeMouse.y,
+            dx,
+            dy
+        );
+    }
+});
+
+function createSmokeParticle(x, y, dx, dy) {
+
+    const angle = Math.random() * Math.PI * 2;
+    const speed = Math.random() * 1.5 + 0.5;
+
+    const colors = [
+        "rgba(0, 255, 100,",
+        "rgba(255, 50, 180,",
+        "rgba(255, 120, 30,",
+        "rgba(50, 220, 255,",
+        "rgba(170, 60, 255,"
+    ];
+
+    smokeParticles.push({
+
+        x: x + (Math.random() - 0.5) * 10,
+        y: y + (Math.random() - 0.5) * 10,
+
+        vx:
+            -dx * 0.06 +
+            Math.cos(angle) * speed,
+
+        vy:
+            -dy * 0.06 +
+            Math.sin(angle) * speed,
+
+        size: Math.random() * 12 + 6,
+
+        life: 1,
+
+        decay: Math.random() * 0.01 + 0.004,
+
+        color:
+            colors[
+                Math.floor(Math.random() * colors.length)
+            ]
+    });
+}
+
+function updateSmoke() {
+
+    for (let i = smokeParticles.length - 1; i >= 0; i--) {
+
+        const p = smokeParticles[i];
+
+        p.x += p.vx;
+        p.y += p.vy;
+
+        p.vx *= 0.985;
+        p.vy *= 0.985;
+
+        p.vy -= 0.01;
+
+        p.size += 0.2;
+
+        p.life -= p.decay;
+
+        if (p.life <= 0 || p.size > 60) {
+            smokeParticles.splice(i, 1);
+        }
+    }
+}
+
+function drawSmoke() {
+
+    for (const p of smokeParticles) {
+
+        smokeCtx.save();
+
+        const gradient =
+            smokeCtx.createRadialGradient(
+                p.x,
+                p.y,
+                0,
+                p.x,
+                p.y,
+                p.size
+            );
+
+        gradient.addColorStop(
+            0,
+            p.color + p.life + ")"
+        );
+
+        gradient.addColorStop(
+            0.3,
+            p.color + p.life * 0.6 + ")"
+        );
+
+        gradient.addColorStop(
+            0.7,
+            p.color + p.life * 0.15 + ")"
+        );
+
+        gradient.addColorStop(
+            1,
+            p.color + "0)"
+        );
+
+        smokeCtx.fillStyle = gradient;
+
+        smokeCtx.beginPath();
+
+        smokeCtx.arc(
+            p.x,
+            p.y,
+            p.size,
+            0,
+            Math.PI * 2
+        );
+
+        smokeCtx.fill();
+
+        smokeCtx.restore();
+    }
+}
+
+function animateSmoke() {
+
+    smokeCtx.clearRect(
+        0,
+        0,
+        smokeCanvas.width,
+        smokeCanvas.height
+    );
+
+    updateSmoke();
+    drawSmoke();
+
+    requestAnimationFrame(animateSmoke);
+}
+
+animateSmoke();
+
