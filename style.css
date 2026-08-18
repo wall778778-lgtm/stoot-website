@@ -1160,4 +1160,25 @@ footer {
     pointer-events: none;
 }
 
+#smokeToggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+
+    padding: 10px 20px;
+    border-radius: 20px;
+
+    background: #111;
+    color: white;
+
+    border: 1px solid #555;
+    cursor: pointer;
+
+    z-index: 10;
+}
+
+#smokeToggle:hover {
+    background: #222;
+}
+
 ```
