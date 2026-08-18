@@ -895,6 +895,39 @@ document.addEventListener("mousemove", (event) => {
     }
 });
 
+document.addEventListener("touchmove", (event) => {
+
+    if (!smokeEnabled) return;
+
+    const touch = event.touches[0];
+
+    smokeMouse.lastX = smokeMouse.x;
+    smokeMouse.lastY = smokeMouse.y;
+
+    smokeMouse.x = touch.clientX;
+    smokeMouse.y = touch.clientY;
+
+    const dx = smokeMouse.x - smokeMouse.lastX;
+    const dy = smokeMouse.y - smokeMouse.lastY;
+
+    const speed = Math.sqrt(dx * dx + dy * dy);
+
+    const amount = Math.min(
+        Math.floor(speed / 3) + 1,
+        10
+    );
+
+    for (let i = 0; i < amount; i++) {
+        createSmokeParticle(
+            smokeMouse.x,
+            smokeMouse.y,
+            dx,
+            dy
+        );
+    }
+
+}, { passive: true });
+
 function createSmokeParticle(x, y, dx, dy) {
 
     const angle = Math.random() * Math.PI * 2;
