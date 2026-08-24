@@ -1254,4 +1254,66 @@ footer {
     }
 }
 
+
+.section-description {
+    max-width: 800px;
+    margin: 20px auto 50px;
+    line-height: 1.8;
+    opacity: 0.85;
+}
+
+
+.screenshots-grid {
+
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px;
+    max-width: 1100px;
+    margin: auto;
+
+}
+
+
+.screenshot-card {
+
+    text-align: center;
+
+}
+
+
+.screenshot-card img {
+
+    width: 100%;
+    border-radius: 15px;
+    display: block;
+    margin-bottom: 20px;
+
+}
+
+
+.screenshot-card h3 {
+
+    margin-bottom: 15px;
+
+}
+
+
+.screenshot-card p {
+
+    line-height: 1.7;
+    opacity: 0.8;
+
+}
+
+
+@media(max-width:800px){
+
+    .screenshots-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+}
+
 ```
