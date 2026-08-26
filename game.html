@@ -2,608 +2,408 @@
 <html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6545549648647972"
-crossorigin="anonymous"></script>
+    <title>STOOT 3.0 — Download</title>
 
-<meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at 50% 20%, rgba(70, 120, 255, 0.15), transparent 35%),
+                #050812;
+            color: white;
+        }
 
-<title>STOOT — Download Space Shooter</title>
+        .game-page {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 60px 25px 100px;
+        }
 
-<link rel="stylesheet" href="style.css">
+        .game-top {
+            text-align: center;
+            margin-bottom: 50px;
+        }
 
+        .game-top .small-title {
+            color: #6da8ff;
+            letter-spacing: 4px;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .game-top h1 {
+            font-size: clamp(50px, 8vw, 90px);
+            margin: 0;
+            letter-spacing: 8px;
+        }
+
+        .game-top h2 {
+            margin-top: 10px;
+            font-size: 20px;
+            letter-spacing: 3px;
+            opacity: 0.75;
+        }
+
+        .game-image {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto 45px;
+            display: block;
+            border-radius: 18px;
+            box-shadow: 0 0 50px rgba(60, 120, 255, 0.2);
+        }
+
+        .game-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+
+        .game-box {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 18px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .game-box h2 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+        }
+
+        .game-box p {
+            line-height: 1.8;
+            opacity: 0.8;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-row span:first-child {
+            opacity: 0.55;
+        }
+
+        .info-row span:last-child {
+            font-weight: bold;
+        }
+
+        .download-area {
+            text-align: center;
+            margin-top: 45px;
+            padding: 45px 25px;
+            border-radius: 20px;
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(30, 90, 180, 0.18),
+                    rgba(100, 40, 180, 0.12)
+                );
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .download-area h2 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .download-area p {
+            opacity: 0.7;
+            margin-bottom: 30px;
+        }
+
+        .download-button-game {
+            display: inline-block;
+            padding: 18px 40px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #2878ff, #6a42ff);
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            box-shadow: 0 10px 30px rgba(50, 100, 255, 0.25);
+            transition: 0.25s;
+        }
+
+        .download-button-game:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(50, 100, 255, 0.4);
+        }
+
+        .requirements {
+            margin-top: 40px;
+        }
+
+        .requirements ul {
+            padding-left: 20px;
+            line-height: 2;
+            opacity: 0.8;
+        }
+
+        .controls {
+            margin-top: 40px;
+        }
+
+        .control-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 13px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .key {
+            padding: 5px 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.06);
+            font-weight: bold;
+        }
+
+        .back-button {
+            display: block;
+            width: fit-content;
+            margin: 45px auto 0;
+            color: white;
+            text-decoration: none;
+            opacity: 0.65;
+            transition: 0.2s;
+        }
+
+        .back-button:hover {
+            opacity: 1;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            opacity: 0.5;
+        }
+
+        @media (max-width: 800px) {
+            .game-content {
+                grid-template-columns: 1fr;
+            }
+
+            .game-page {
+                padding-top: 35px;
+            }
+        }
+    </style>
 </head>
-
 
 <body>
 
+    <div class="stars"></div>
+    <div class="stars stars2"></div>
+    <div class="stars stars3"></div>
 
-<canvas id="smokeCanvas"></canvas>
+    <main class="game-page">
 
-<div class="stars"></div>
-<div class="stars stars2"></div>
-<div class="stars stars3"></div>
+        <!-- TITLE -->
 
+        <section class="game-top">
 
-<button id="smokeToggle">
-✨ Smoke: ON
-</button>
+            <p class="small-title">
+                STOOT GAME
+            </p>
 
+            <h1>
+                STOOT
+            </h1>
 
+            <h2>
+                SPACE BATTLE • VERSION 3.0
+            </h2>
 
-<header>
+        </section>
 
-<div class="logo">
-<span>STOOT</span>
-</div>
 
+        <!-- GAME IMAGE -->
 
-<nav>
+        <img
+            class="game-image"
+            src="images/gameplay1.png"
+            alt="STOOT gameplay"
+        >
 
-<a href="index.html">
-HOME
-</a>
 
-<a href="index.html#features">
-FEATURES
-</a>
+        <!-- INFORMATION -->
 
-<a href="index.html#about">
-ABOUT
-</a>
+        <section class="game-content">
 
-<a href="index.html#how-to-play">
-HOW TO PLAY
-</a>
+            <div class="game-box">
 
-<a href="index.html#news">
-NEWS
-</a>
+                <h2>
+                    ABOUT THE GAME
+                </h2>
 
-<a href="index.html#screenshots">
-SCREENSHOTS
-</a>
+                <p>
+                    STOOT is an independent space shooter focused on
+                    fast combat, survival and asteroid destruction.
+                </p>
 
-<a href="contact.html">
-CONTACT
-</a>
+                <p>
+                    Take control of your spacecraft, destroy dangerous
+                    space rocks, fight enemies and collect powerful
+                    abilities while trying to survive the battlefield.
+                </p>
 
-</nav>
+                <p>
+                    Large asteroids can split into smaller pieces,
+                    creating new threats around your ship. Stay mobile,
+                    watch your surroundings and choose your attacks
+                    carefully.
+                </p>
 
+                <p>
+                    STOOT 3.0 is the current version of the project,
+                    with gameplay systems and improvements developed
+                    from scratch using C++ and SFML.
+                </p>
 
-<a class="nav-download"
-href="game.html">
+            </div>
 
-DOWNLOAD
 
-</a>
+            <div class="game-box">
 
+                <h2>
+                    GAME INFO
+                </h2>
 
-</header>
+                <div class="info-row">
+                    <span>Game</span>
+                    <span>STOOT</span>
+                </div>
 
+                <div class="info-row">
+                    <span>Version</span>
+                    <span>3.0</span>
+                </div>
 
+                <div class="info-row">
+                    <span>Platform</span>
+                    <span>Windows PC</span>
+                </div>
 
+                <div class="info-row">
+                    <span>Genre</span>
+                    <span>Space Shooter</span>
+                </div>
 
+                <div class="info-row">
+                    <span>Engine</span>
+                    <span>SFML</span>
+                </div>
 
-<section class="hero game-page">
+                <div class="info-row">
+                    <span>Language</span>
+                    <span>C++</span>
+                </div>
 
+            </div>
 
-<div class="hero-content">
+        </section>
 
 
-<p class="small-title">
-MISSION DOWNLOAD
-</p>
+        <!-- DOWNLOAD -->
 
+        <section class="download-area">
 
-<h1>
-STOOT
-</h1>
+            <h2>
+                READY TO PLAY?
+            </h2>
 
+            <p>
+                Download STOOT 3.0 for Windows PC.
+            </p>
 
-<h2>
-ENTER THE BATTLEFIELD.
-</h2>
+            <a
+                class="download-button-game"
+                href="game/STOOT.zip"
+                download="STOOT.zip"
+            >
+                ⬇ DOWNLOAD STOOT 3.0
+            </a>
 
+        </section>
 
-<p class="description">
 
-Download STOOT and experience a fast-paced space shooter
-where survival depends on movement, strategy and combat skills.
+        <!-- CONTROLS -->
 
-</p>
+        <section class="game-box controls">
 
+            <h2>
+                CONTROLS
+            </h2>
 
-<div class="buttons">
+            <div class="control-row">
+                <span>Move</span>
+                <span class="key">W A S D</span>
+            </div>
 
+            <div class="control-row">
+                <span>Aim</span>
+                <span class="key">Mouse</span>
+            </div>
 
-<a class="download-button"
-href="game/STOOT.zip"
-download="STOOT.zip">
+            <div class="control-row">
+                <span>Shoot</span>
+                <span class="key">Automatic</span>
+            </div>
 
-⬇ DOWNLOAD STOOT
+        </section>
 
-</a>
 
+        <!-- REQUIREMENTS -->
 
-</div>
+        <section class="game-box requirements">
 
+            <h2>
+                SYSTEM REQUIREMENTS
+            </h2>
 
-<p class="version">
+            <ul>
+                <li>Windows PC</li>
+                <li>Keyboard and mouse</li>
+                <li>DirectX-compatible graphics support</li>
+                <li>At least 2 GB available storage</li>
+                <li>Internet connection is not required to play</li>
+            </ul>
 
-CURRENT VERSION:
-<strong>3.0</strong>
+        </section>
 
-</p>
 
+        <!-- BACK -->
 
-</div>
+        <a
+            href="index.html"
+            class="back-button"
+        >
+            ← BACK TO STOOT
+        </a>
 
+    </main>
 
 
-<div class="hero-ship">
-
-<div class="glow"></div>
-
-<img src="images/STOOT_name.png"
-alt="STOOT Game">
-
-</div>
-
-
-
-</section>
-
-
-
-
-
-<section class="section">
-
-
-<div class="section-title">
-
-<p>
-GAME INFORMATION
-</p>
-
-<h2>
-ABOUT STOOT
-</h2>
-
-</div>
-
-
-
-<div class="about-content">
-
-
-<div class="about-text">
-
-
-<h3>
-A COMPLETE SPACE SHOOTER EXPERIENCE
-</h3>
-
-
-<p>
-
-STOOT is an independent space shooter game developed
-from scratch using C++ and SFML.
-
-</p>
-
-
-<p>
-
-Players control a spacecraft, destroy dangerous asteroids,
-fight enemies and survive increasingly difficult battles.
-
-</p>
-
-
-<p>
-
-Every run creates a different challenge. Players must manage
-their movement, position and decisions to survive longer.
-
-</p>
-
-
-</div>
-
-
-
-<div class="about-info">
-
-
-<div class="info-box">
-
-<span>
-PLATFORM
-</span>
-
-<strong>
-WINDOWS PC
-</strong>
-
-</div>
-
-
-<div class="info-box">
-
-<span>
-GENRE
-</span>
-
-<strong>
-SPACE SHOOTER
-</strong>
-
-</div>
-
-
-<div class="info-box">
-
-<span>
-ENGINE
-</span>
-
-<strong>
-SFML
-</strong>
-
-</div>
-
-
-<div class="info-box">
-
-<span>
-VERSION
-</span>
-
-<strong>
-3.0
-</strong>
-
-</div>
-
-
-</div>
-
-
-</div>
-
-
-</section>
-
-
-
-
-
-
-
-<section class="section">
-
-
-<div class="section-title">
-
-<p>
-SYSTEMS
-</p>
-
-<h2>
-GAME FEATURES
-</h2>
-
-</div>
-
-
-
-<div class="feature-grid">
-
-
-<div class="feature-card">
-
-<div class="feature-icon">
-🚀
-</div>
-
-<h3>
-SPACE COMBAT
-</h3>
-
-<p>
-Control your ship and fight through dangerous space battles.
-</p>
-
-</div>
-
-
-
-<div class="feature-card">
-
-<div class="feature-icon">
-☄️
-</div>
-
-<h3>
-ASTEROID SYSTEM
-</h3>
-
-<p>
-Destroy large rocks and survive the fragments they create.
-</p>
-
-</div>
-
-
-
-<div class="feature-card">
-
-<div class="feature-icon">
-⚡
-</div>
-
-<h3>
-POWER-UPS
-</h3>
-
-<p>
-Collect abilities that help you survive difficult situations.
-</p>
-
-</div>
-
-
-
-<div class="feature-card">
-
-<div class="feature-icon">
-🏆
-</div>
-
-<h3>
-PROGRESSION
-</h3>
-
-<p>
-Increase your score and face stronger challenges.
-</p>
-
-</div>
-
-
-</div>
-
-
-</section>
-
-
-
-
-
-
-<section class="section">
-
-
-<div class="section-title">
-
-<p>
-CONTROLS
-</p>
-
-<h2>
-HOW TO PLAY
-
-</h2>
-
-</div>
-
-
-
-<div class="about-text"
-style="max-width:800px;margin:auto;">
-
-
-<h3>
-MOVEMENT
-</h3>
-
-<p>
-Use keyboard controls to move your spacecraft and avoid incoming threats.
-</p>
-
-
-<h3>
-COMBAT
-</h3>
-
-<p>
-Aim, shoot enemies and destroy asteroids before they surround you.
-</p>
-
-
-<h3>
-SURVIVAL
-</h3>
-
-<p>
-Keep moving, watch your position and choose the right moment to attack.
-</p>
-
-
-</div>
-
-
-</section>
-
-
-
-
-
-
-<section class="section">
-
-
-<div class="section-title">
-
-<p>
-VISUAL ARCHIVE
-</p>
-
-
-<h2>
-GAMEPLAY SCREENSHOTS
-</h2>
-
-
-</div>
-
-
-
-<div class="screenshots-grid">
-
-
-<div class="screenshot-card">
-
-<img src="images/gameplay1.png"
-alt="STOOT gameplay">
-
-<h3>
-SPACE BATTLE
-</h3>
-
-
-<p>
-Fight through dangerous space environments.
-</p>
-
-
-</div>
-
-
-
-
-<div class="screenshot-card">
-
-<img src="images/gameplay2.png"
-alt="STOOT asteroid gameplay">
-
-
-<h3>
-ASTEROID CHAOS
-</h3>
-
-
-<p>
-Survive asteroid destruction and changing battle conditions.
-</p>
-
-
-</div>
-
-
-</div>
-
-
-</section>
-
-
-
-
-
-
-
-<section class="download-section">
-
-
-<div class="download-content">
-
-
-<p>
-READY?
-</p>
-
-
-<h2>
-START YOUR MISSION.
-</h2>
-
-
-<p>
-Download STOOT and enter the universe.
-</p>
-
-
-
-<a class="big-download"
-href="game/STOOT.zip"
-download="STOOT.zip">
-
-⬇ DOWNLOAD STOOT
-
-</a>
-
-
-
-<small>
-Windows PC • Version 3.0
-</small>
-
-
-</div>
-
-
-</section>
-
-
-
-
-
-<footer>
-
-
-<div class="footer-logo">
-STOOT
-</div>
-
-
-<p>
-© 2026 STOOT. All rights reserved.
-</p>
-
-
-<div class="footer-links">
-
-
-<a href="index.html">
-Home
-</a>
-
-
-<a href="privacy.html">
-Privacy Policy
-</a>
-
-
-<a href="contact.html">
-Contact
-</a>
-
-
-</div>
-
-
-</footer>
-
-
-
-
-<script src="script.js"></script>
-
+    <footer>
+        © 2026 STOOT. All rights reserved.
+    </footer>
 
 </body>
 
